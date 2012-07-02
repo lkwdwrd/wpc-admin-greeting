@@ -1,0 +1,1 @@
+As soon as I have one, this directory will house the .pot, .po, and .mo files.
