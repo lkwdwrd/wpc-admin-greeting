@@ -14,7 +14,7 @@ This filters the admin bar, allowing you to chaing the default "Howdy" greeting 
 
 == Installation ==
 
-Upload the Akismet plugin to your blog, Activate it, then enter your desired greeting in Settings > General.
+Upload the Admin Greeting Customizer plugin to your blog, Activate it, then enter your desired greeting in Settings > General.
 
 Easy Peasy.
 
