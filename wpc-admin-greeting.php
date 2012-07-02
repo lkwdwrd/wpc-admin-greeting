@@ -1,7 +1,7 @@
 <?php 
 /*
  * Plugin Name: Admin Greeting Customizer
- * Plugin URI: http://wpcopilot.net
+ * Plugin URI: https://github.com/lkwdwrd/wpc-admin-greeting
  * Description: Adds a setting in General Settings that allows you to customize the greeting in your admin panel.
  * Version: 1.2
  * Author: Luke Woodward
