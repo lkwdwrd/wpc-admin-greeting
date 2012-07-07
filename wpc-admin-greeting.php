@@ -1,15 +1,19 @@
 <?php 
+/**
+ * @package Admin_Greeting_Customizer
+ * @version 1.3
+ */
 /*
  * Plugin Name: Admin Greeting Customizer
  * Plugin URI: https://github.com/lkwdwrd/wpc-admin-greeting
  * Description: Adds a setting in General Settings that allows you to customize the greeting in your admin panel.
- * Version: 1.2
+ * Version: 1.3
  * Author: Luke Woodward
  * Author URI: http://luke-woodward.com
  * License: GNU General Public License v2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ *
  */
-
 /* 
  * Copyright (C) 2012 Woodward Multimedia, & Luke Woodward
  *
@@ -29,7 +33,7 @@
  */
 
 /**
- * Setup Plugin Actions
+ * Setup Plugin Actions & Settings
  * ---------------------------------------------------------------------------------*/
 
 add_action( 'plugins_loaded', 'wpc_admin_greeting_init' );
@@ -37,21 +41,30 @@ add_action( 'admin_init', 'wpc_admin_settings_init' );
 add_action( 'admin_bar_menu', 'wpc_admin_bar_filter' );
 
 /**
- * l10n - action: 'plugins_loaded'
- * ---------------------------------------------------------------------------------*/
-
-if ( !function_exists( 'wpc_admin_greeting_init' ) ){
+ * Load the plugin text domain for l10n
+ * 
+ *
+ * Uses action: 'plugins_loaded'
+ *
+ * @since 1.2
+ */
+if ( ! function_exists( 'wpc_admin_greeting_init' ) ){
 	function wpc_admin_greeting_init() {
 	  load_plugin_textdomain( 'wpc_admin_greeting', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' ); 
 	}
 }// wpc_admin_greeting_init
 
 /**
- * Plugin Settings Setup using the Settings API - action: 'admin_init'
- * ---------------------------------------------------------------------------------*/
-
-//Initialize the Settings
-if ( !function_exists( 'wpc_admin_settings_init' ) ){
+ * Initialize plugin settings
+ * 
+ * Initializes one section and one field using the WordPress Settings API.
+ * Adds the field to Settings>General in the WordPress dashboard.
+ *
+ * Uses action: 'admin_init'
+ *
+ * @since 1.0
+ */
+if ( ! function_exists( 'wpc_admin_settings_init' ) ){
 	function wpc_admin_settings_init() {
 		// Add the section to general settings
 		add_settings_section('wpc_greeting_section',
@@ -69,8 +82,19 @@ if ( !function_exists( 'wpc_admin_settings_init' ) ){
 		// Register the wpc_admin_greeting setting
 		register_setting('general', 'wpc_admin_greeting', 'wpc_greeting_filter');
 	}
-} //wpc_admin_settings_init 
-//Limit to greeting to 30 characters, also add a filter to allow others to hook in if desired.
+} //wpc_admin_settings_init
+/**
+ * Custom filter to limit the greeting to 30 characters
+ * 
+ * Takes the greeting and chops it to 30 characters if it is longer, also adds 
+ * a filter to allow others to hook in if desired to change this behavior
+ *
+ * @since 1.1
+ * @uses apply_filters() Calls 'wpc_greeting' on the filtered greeeing and greeting.
+ *
+ * @param string $greeting The greeting enetered in the dashboard
+ * @return int The sanitized greeting.
+ */
 if ( !function_exists( 'wpc_greeting_filter' ) ){
 	function wpc_greeting_filter( $greeting ){
 		$filtered = $greeting;
@@ -79,13 +103,21 @@ if ( !function_exists( 'wpc_greeting_filter' ) ){
 		return apply_filters( 'wpc_greeting', $filtered, $greeting );
 	}
 }//wpc_greeting_filter
-//Add a short description to the settings section.
+/**
+ * Add a description to the settings section
+ *
+ * @since 1.0
+ */
 if ( !function_exists( 'wpc_admin_settings_section' ) ){
 	function wpc_admin_settings_section() {
 		echo '<p>'.__('Set a custom greeting for your admin bar.', 'wpc_admin_greeting') . '</p>';
 	}
 } //wpc_admin_settings_section
-//Print the setting option and default value
+/**
+ * Print the setting option and default value
+ *
+ * @since 1.0
+ */
 if ( !function_exists( 'wpc_admin_setting' ) ){
 	function wpc_admin_setting() {
 		$setting = get_option('wpc_admin_greeting' );
@@ -97,10 +129,16 @@ if ( !function_exists( 'wpc_admin_setting' ) ){
 }//wpc_admin_setting
 
 /**
- * Greeting Filter - action: 'admin-bar-menu'
+ * Fiter the Greeting
  * ---------------------------------------------------------------------------------*/
 
-//Filters the admin bar greeting so that it doesn't always say 'Howdy'
+/**
+ * Change the admin bar greeting text based on the user setting.
+ * If nothing has changed from the default, ignore.
+ *
+ * @param object $admin_bar Admin bar menu to override.
+ * @return void
+ */
 if ( !function_exists( 'wpc_admin_bar_filter' ) ){
 	function wpc_admin_bar_filter( $admin_bar ){
 		$admin_menu = $admin_bar->get_node('my-account');
