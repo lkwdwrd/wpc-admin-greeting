@@ -10,7 +10,7 @@ Adds a setting in General Settings that allows you to customize the greeting in 
 
 == Description ==
 
-This filters the admin bar, allowing you to chaing the default "Howdy" greeting to be whatever you want it to be. It adds a section in Settings > General allowing you to set whatever greeting you would like, limited to 30 characters.
+This filters the admin bar, allowing you to change the default "Howdy" greeting to be whatever you want it to be. It adds a section in Settings > General allowing you to set whatever greeting you would like, limited to 30 characters.
 
 == Installation ==
 
