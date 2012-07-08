@@ -12,10 +12,9 @@
  * Author URI: http://luke-woodward.com
  * License: GNU General Public License v2 or later
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
- *
  */
 /* 
- * Copyright (C) 2012 Woodward Multimedia, & Luke Woodward
+ * Copyright (C) 2012 Woodward Multimedia & Luke Woodward
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,13 +31,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-/**
- * Setup Plugin Actions & Settings
+/* Setup Plugin Actions & Settings
  * ---------------------------------------------------------------------------------*/
 
 add_action( 'plugins_loaded', 'wpc_admin_greeting_init' );
 add_action( 'admin_init', 'wpc_admin_settings_init' );
-add_action( 'admin_bar_menu', 'wpc_admin_bar_filter' );
+add_filter( 'gettext', 'wpc_gettext_filter', 10, 3 );
 
 /**
  * Load the plugin text domain for l10n
@@ -52,7 +50,7 @@ if ( ! function_exists( 'wpc_admin_greeting_init' ) ){
 	function wpc_admin_greeting_init() {
 	  load_plugin_textdomain( 'wpc_admin_greeting', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' ); 
 	}
-}// wpc_admin_greeting_init
+} // wpc_admin_greeting_init
 
 /**
  * Initialize plugin settings
@@ -107,7 +105,7 @@ if ( ! function_exists( 'wpc_greeting_filter' ) ){
 			$filtered = substr( $greeting, 0, 30 );
 		return apply_filters( 'wpc_greeting', $filtered, $greeting );
 	}
-}//wpc_greeting_filter
+} //wpc_greeting_filter
 /**
  * Add a description to the settings section
  *
@@ -131,28 +129,29 @@ if ( ! function_exists( 'wpc_admin_setting' ) ){
 		echo '<input name="wpc_admin_greeting" id="wpc_admin_greeting" type="text" value="' . esc_attr( $setting ) . '" />';
 		echo '<p class="description">' . esc_html_e( 'Greeting is limited to 30 characters.', 'wpc_admin_greeting' ) . '</p>';
 	}
-}//wpc_admin_setting
+} //wpc_admin_setting
 
-/**
- * Fiter the Greeting
+/* Filter the Greeting
  * ---------------------------------------------------------------------------------*/
 
 /**
  * Change the admin bar greeting text based on the user setting.
  * If nothing has changed from the default, ignore.
  *
+ * Uses action: 'gettext'
+ *
  * @param object $admin_bar Admin bar menu to override.
- * @return void
+ * @return string The modified, translated text.
  */
-if ( ! function_exists( 'wpc_admin_bar_filter' ) ){
-	function wpc_admin_bar_filter( $admin_bar ){
+
+function wpc_gettext_filter( $translated_text, $text, $domain ){
+	if ( $text == 'Howdy, %1$s' ){
 		$greeting = get_option( 'wpc_admin_greeting' );
 		$default_greeting = __( 'Howdy,', 'wpc_admin_greeting' );
 		$greeting = ( $greeting == '' ) ? $default_greeting : $greeting;
 		if ( ! empty( $greeting ) && $greeting != $default_greeting ) {
-			$admin_menu = $admin_bar->get_node( 'my-account' );
-			$admin_menu->title = preg_replace( "/^{$default_greeting}/", $greeting, $admin_menu->title );
-			$admin_bar->add_node( $admin_menu );
+			return $greeting . ' %1$s';
 		}
 	}
-}//wpc_acmin_bar_filter
+	return $translated_text;
+}
