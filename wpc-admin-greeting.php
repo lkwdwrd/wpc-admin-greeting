@@ -110,7 +110,7 @@ if ( !function_exists( 'wpc_greeting_filter' ) ){
  */
 if ( !function_exists( 'wpc_admin_settings_section' ) ){
 	function wpc_admin_settings_section() {
-		echo '<p>'.__('Set a custom greeting for your admin bar.', 'wpc_admin_greeting') . '</p>';
+		echo '<p>'.esc_html_e('Set a custom greeting for your admin bar.', 'wpc_admin_greeting') . '</p>';
 	}
 } //wpc_admin_settings_section
 /**
@@ -121,10 +121,10 @@ if ( !function_exists( 'wpc_admin_settings_section' ) ){
 if ( !function_exists( 'wpc_admin_setting' ) ){
 	function wpc_admin_setting() {
 		$setting = get_option('wpc_admin_greeting' );
-		$default_greeting = __( 'Howdy', 'wpc_admin_greeting' );
+		$default_greeting = __( 'Howdy,', 'wpc_admin_greeting' );
 		$setting = ( $setting == '' ) ? $default_greeting : $setting;
-		echo '<input name="wpc_admin_greeting" id="wpc_admin_greeting" type="text" value="' . $setting . '" />';
-		echo '<p class="description">' . __('Greeting is limited to 30 characters.', 'wpc_admin_greeting' ) . '</p>';
+		echo '<input name="wpc_admin_greeting" id="wpc_admin_greeting" type="text" value="' . esc_attr( $setting ) . '" />';
+		echo '<p class="description">' . esc_html_e('Greeting is limited to 30 characters.', 'wpc_admin_greeting' ) . '</p>';
 	}
 }//wpc_admin_setting
 
@@ -141,12 +141,13 @@ if ( !function_exists( 'wpc_admin_setting' ) ){
  */
 if ( !function_exists( 'wpc_admin_bar_filter' ) ){
 	function wpc_admin_bar_filter( $admin_bar ){
-		$admin_menu = $admin_bar->get_node('my-account');
 		$greeting = get_option('wpc_admin_greeting' );
-		$default_greeting = __( 'Howdy', 'wpc_admin_greeting' );
+		$default_greeting = __( 'Howdy,', 'wpc_admin_greeting' );
 		$greeting = ( $greeting == '' ) ? $default_greeting : $greeting;
-		$admin_menu->title = preg_replace( "/^{$default_greeting}/", $greeting, $admin_menu->title );
-		$admin_bar->remove_node('my-account');
-		$admin_bar->add_node($admin_menu);
+		if ( ! empty( $greeting ) && $greeting != $default_greeting ) {
+			$admin_menu = $admin_bar->get_node('my-account');
+			$admin_menu->title = preg_replace( "/^{$default_greeting}/", $greeting, $admin_menu->title );
+			$admin_bar->add_node( $admin_menu );
+		}
 	}
 }//wpc_acmin_bar_filter
