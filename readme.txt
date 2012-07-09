@@ -20,6 +20,11 @@ Easy Peasy.
 
 == Changelog ==
 
+= 1.3 = 
+* Simplified some of the replacement logic.
+* Switched to PHPDoc style comments.
+* Escaped and Sanitized user input data.
+
 = 1.2 = 
 * Added internationalization support.
 
